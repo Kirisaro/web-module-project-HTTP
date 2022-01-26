@@ -6,8 +6,9 @@ import Movie from './components/Movie';
 
 import MovieHeader from './components/MovieHeader';
 
+import EditMovieForm from './components/EditMovieForm';
 import FavoriteMovieList from './components/FavoriteMovieList';
-
+import AddMovieForm from './components/AddMovieForm'
 import axios from 'axios';
 
 const App = (props) => {
@@ -15,7 +16,7 @@ const App = (props) => {
   const [favoriteMovies, setFavoriteMovies] = useState([]);
 
   useEffect(()=>{
-    axios.get('http://localhost:5001/api/movies')
+    axios.get('http://localhost:5000/api/movies')
       .then(res => {
         setMovies(res.data);
       })
@@ -25,6 +26,7 @@ const App = (props) => {
   }, []);
 
   const deleteMovie = (id)=> {
+    setMovies(movies.filter(item => (item.id !== Number(id))));
   }
 
   const addToFavorites = (movie) => {
@@ -34,7 +36,7 @@ const App = (props) => {
   return (
     <div>
       <nav className="navbar navbar-dark bg-dark">
-        <span className="navbar-brand" > HTTP / CRUD Module Project</span>
+        <span className="navbar-brand" ><img width="40px" alt="" src="./Lambda-Logo-Red.png"/> HTTP / CRUD Module Project</span>
       </nav>
 
       <div className="container">
@@ -44,10 +46,15 @@ const App = (props) => {
         
           <Switch>
             <Route path="/movies/edit/:id">
+            <EditMovieForm setMovies={setMovies}/>
+            </Route>
+
+            <Route path="/movies/add/" component={AddMovieForm}>
+              <AddMovieForm setMovies={ setMovies}/>
             </Route>
 
             <Route path="/movies/:id">
-              <Movie/>
+              <Movie deleteMovie={deleteMovie}/>
             </Route>
 
             <Route path="/movies">
@@ -66,4 +73,3 @@ const App = (props) => {
 
 
 export default App;
-
